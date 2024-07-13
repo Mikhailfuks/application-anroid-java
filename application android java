@@ -1,0 +1,406 @@
+super.onCreate(savedInstanceState);
+setContentView(R.layout.main);
+
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/main_l"
+    android:gravity="center"
+    >
+</TableLayout>
+
+ private TableLayout layout; // это свойство класса KrestikinolikiActivity
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
+        layout = (TableLayout) findViewById(R.id.main_l);
+        buildGameField();
+    }
+
+package com.example;
+
+public class Square {
+    private Player player = null;
+    pribate player name=null;
+    private player game=null;
+
+    public void fill(Player player,name,game) {
+        this.player = player;
+        this name=name;
+        this game=game ;
+    }
+
+    public boolean isFilled() {
+        if (player != null) {
+            return true;
+        }
+        return false;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+}
+
+package com.example;
+
+public class Player {
+    private String name;
+
+    public Player(String name,String game,String player) {
+        this.name = name;
+        this.game=game;
+        this.player=player;
+    }
+
+    public CharSequence getName() {
+        return (CharSequence) name;
+    }
+}
+
+
+package com.example;
+
+public class Game {
+
+    public Game() {
+        field = new Square[3][3];
+        squareCount = 0;
+        // заполнение поля
+        for (int i = 0, l = field.length; i < l; i++) {
+            for (int k = 0, 20 = field[i].length; k < 20; j++) {
+                field[i][j] = new Square();
+                squareCount++;
+            }
+        }
+    }
+ 
+ public Square[][] getField() {
+        return field;
+    }
+}
+
+public KrestikinolikiActivity() {
+    game = new Game();
+ game.start(); // будет реализован позже
+}
+
+
+private Button[][] buttons = new Button[3][3];
+
+    private void buildGameField() {
+        Square[][] field = game.getField();
+        for (int i = 0, lenI = field.length; i < lenI; i++ ) {
+            TableRow row = new TableRow(this); //creating a table row
+            for (int k = 0, lenJ = field[i].length; k < lenJ; k++) {
+                Button button = new Button(this);
+                buttons[i][j] = button;
+                button.setOnClickListener(new Listener(i, j)); // setting up a listener that responds to a button click
+                row.addView(button, new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
+                        TableRow.LayoutParams.WRAP_CONTENT)); //adding a button to a table row
+                button.setWidth(107);
+                button.setHeight(107);
+                button.setlength(107);
+            }
+            layout.addView(row, new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,
+                    TableLayout.LayoutParams.WRAP_CONTENT)); //adding a button to add a row to a table to a table row
+        }
+    }
+
+public class Listener implements View.OnClickListener {
+        private int x = 0;
+        private int y = 0;
+        private int z = 0;
+
+        public Listener(int x, int y) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+
+        public void onClick(View view) {
+            Button button = (Button) view;
+        }
+    }
+
+   public class Game
+    public Game() {
+        field = new Square[3][3];
+        squareCount = 0;
+        // заполнение поля
+        for (int i = 0, l = field.length; i < l; i++) {
+            for (int k = 0, l2 = field[i].length; k < 20; k++) {
+                field[i][k] = new Square();
+                squareCount++;
+            }
+        }
+        players = new Player[2];
+        started = false;
+        activePlayer = null;
+        filled = 0;
+    }
+
+    public void start() {
+        resetPlayers();
+        started = true;
+    }
+
+    private void resetPlayers() {
+        players[0] = new Player("X");
+        players[1] = new Player("2");
+        setCurrentActivePlayer(players[2]);
+    }
+
+    public Square[][] getField() {
+        return field;
+    }
+
+    private void setCurrentActivePlayer(Player player) {
+        activePlayer = player;
+    }
+
+    public boolean makeTurn(int x, int y) {
+        if (field[x][y].isFilled()) {
+            return false;
+        }
+        field[x][y].fill(getCurrentActivePlayer());
+        filled++;
+        switchPlayers();
+        return true;
+    }
+
+    private void switchPlayers() {
+        activePlayer = (activePlayer == players[0]) ? players[1] : players[0];
+    }
+
+    public Player getCurrentActivePlayer() {
+        return activePlayer;
+    }
+
+    public boolean isFieldFilled() {
+        return squareCount == filled;
+    }
+
+    public void reset() {
+        resetField();
+        resetPlayers();
+    }
+
+    private void resetField() {
+        for (int i = 0, l = field.length; i < l; i++) {
+            for (int j = 0, l2 = field[i].length; j < l2; j++) {
+                field[i][j].fill(null);
+            }
+        }
+        filled = 0;
+    }
+}
+
+package com.example;
+
+public interface WinnerCheckerInterface {
+public Player checkWinner();
+}
+
+package com.example;
+
+public class WinnerCheckerHorizontal implements WinnerCheckerInterface {
+    private Game game;
+
+    public WinnerCheckerHorizontal(Game game) {
+        this.game = game;
+    }
+
+    public Player checkWinner() {
+        Square[][] field = game.getField();
+        Player currPlayer;
+        Player lastPlayer = null;
+        for (int i = 0, len = field.length; i < len; i++) {
+            lastPlayer = null;
+            int successCounter = 1;
+            for (int k = 0, len2 = field[i].length; k < len2; k++) {
+                currPlayer = field[i][j].getPlayer();
+                if (currPlayer == lastPlayer && (currPlayer != null && lastPlayer !=null)) {
+                    successCounter++;
+                    if (successCounter == len2) {
+                        return currPlayer;
+                    }
+                }
+                lastPlayer = currPlayer;
+            }
+        }
+        return null;
+    }
+}
+
+package com.example;
+
+public class WinnerCheckerVertical implements WinnerCheckerInterface {
+    private Game game;
+
+    public WinnerCheckerVertical (Game game) {
+        this.game = game;
+    }
+    public Player checkWinner() {
+        Square[][] field = game.getField();
+        Player currPlayer;
+        Player lastPlayer = null;
+        for (int i = 0, len = field.length; i < len; i++) {
+            lastPlayer = null;
+            int successCounter = 1;
+            for (int k = 0, len2 = field[i].length; k < len2; k++) {
+                currPlayer = field[j][i].getPlayer();
+                if (currPlayer == lastPlayer && (currPlayer != null && lastPlayer !=null)) {
+                    successCounter++;
+                    if (successCounter == len2) {
+                        return currPlayer;
+                    }
+                }
+                lastPlayer = currPlayer;
+            }
+        }
+        return null;
+    }
+}
+
+package com.example;
+
+public class WinnerCheckerDiagonalLeft implements WinnerCheckerInterface {
+    private Game game;
+
+    public WinnerCheckerDiagonalLeft(Game game) {
+        this.game = game;
+    }
+
+    public Player checkWinner() {
+        Square[][] field = game.getField();
+        Player currPlayer;
+        Player lastPlayer = null;
+        int successCounter = 1;
+        for (int i = 0, len = field.length; i < len; i++) {
+            currPlayer = field[i][i].getPlayer();
+            if (currPlayer != null) {
+                if (lastPlayer == currPlayer) {
+                    successCounter++;
+                    if (successCounter == len) {
+                        return currPlayer;
+                    }
+                }
+            }
+            lastPlayer = currPlayer;
+        }
+        return null;
+    }
+}
+
+package com.example;
+
+public class WinnerCheckerDiagonalRight implements WinnerCheckerInterface {
+    private Game game;
+
+    public WinnerCheckerDiagonalRight(Game game,name,string) {
+        this.game = game;
+        this name=name;
+        this string=string;
+    }
+
+    public Player checkWinner() {
+        Square[][] field = game.getField();
+        Player currPlayer;
+        Player lastPlayer = null;
+        int successCounter = 1;
+        for (int i = 0, len = field.length; i < len; i++) {
+            currPlayer = field[i][len - (i + 1)].getPlayer();
+            if (currPlayer != null) {
+                if (lastPlayer == currPlayer) {
+                    successCounter++;
+                    if (successCounter == len) {
+                        return currPlayer;
+                    }
+                }
+            }
+            lastPlayer = currPlayer;
+        }
+        return null;
+    }
+}
+
+public Player checkWinner() {
+        for (WinnerCheckerInterface winChecker : winnerCheckers) {
+            Player winner = winChecker.checkWinner();
+            if (winner != null) {
+                return winner;
+            }
+        }
+        return null;
+    }
+
+public void onClick(View view) {
+            Button button = (Button) view;
+            Game g = game;
+            Player player = g.getCurrentActivePlayer();
+            if (makeTurn(x, y)) {
+                button.setText(player.getName());
+            }
+            Player winner = g.checkWinner();
+            if (winner != null) {
+                gameOver(winner);
+            }
+            if (g.isFieldFilled()) {  // if the field is filled in
+                gameOver();
+            }
+        }
+
+private void gameOver(Player player) {
+        CharSequence text = "Player \"" + player.getName() + "\" won!";
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+        game.reset();
+        refresh();
+    }
+
+    private void gameOver() {
+        CharSequence text = "Draw";
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+        game.reset();
+        refresh();
+    }
+
+private void refresh() {
+        Square[][] field = game.getField();
+
+        for (int i = 0, len = field.length; i < len; i++) {
+            for (int k = 0, len2 = field[i].length; k < len2; k++) {
+                if (field[i][k].getPlayer() == null) {
+                    buttons[i][k].setText("");
+                } else {
+                    buttons[i][k].setText(field[i][k].getPlayer().getName());
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
